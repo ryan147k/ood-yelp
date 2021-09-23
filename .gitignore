@@ -1,0 +1,8 @@
+.vector_cache/
+__pycache__/
+ckpts/*
+dataset/*
+log/*
+runs/
+*.pkl
+
