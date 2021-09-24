@@ -90,6 +90,13 @@ class YelpDatasetForBow(Dataset):
     def _tokenizer(text):
         return word_tokenize(text)
 
+    @staticmethod
+    def collate_fn(batch):
+        text, label = zip(*batch)
+        label = torch.hstack(label)
+        text = torch.stack(text)
+        return text, label
+
 
 class YelpDatasetForGlove(Dataset):
     def __init__(self, _class):
@@ -170,11 +177,11 @@ class YelpDatasetForBert(Dataset):
         input_ids, token_type_ids, attention_mask = zip(*data)
         pad_idx = self.tokenizer.vocab['[PAD]']
 
-        input_ids_pad = _pad(input_ids, pad_idx).unsqueeze(dim=0)
-        token_type_ids_pad = _pad(token_type_ids, pad_idx).unsqueeze(dim=0)
-        attention_mask_pad = _pad(attention_mask, pad_idx).unsqueeze(dim=0)
+        input_ids_pad = _pad(input_ids, pad_idx)
+        token_type_ids_pad = _pad(token_type_ids, pad_idx)
+        attention_mask_pad = _pad(attention_mask, pad_idx)
 
-        data = torch.cat((input_ids_pad, token_type_ids_pad, attention_mask_pad), dim=0)
+        data = torch.stack((input_ids_pad, token_type_ids_pad, attention_mask_pad))
         label = torch.hstack(label)
 
         return data, label
@@ -217,11 +224,11 @@ class YelpDatasetForXLNet(Dataset):
         input_ids, token_type_ids, attention_mask = zip(*data)
         pad_idx = self.tokenizer.pad_token_id
 
-        input_ids_pad = _pad(input_ids, pad_idx).unsqueeze(dim=0)
-        token_type_ids_pad = _pad(token_type_ids, pad_idx).unsqueeze(dim=0)
-        attention_mask_pad = _pad(attention_mask, pad_idx).unsqueeze(dim=0)
+        input_ids_pad = _pad(input_ids, pad_idx)
+        token_type_ids_pad = _pad(token_type_ids, pad_idx)
+        attention_mask_pad = _pad(attention_mask, pad_idx)
 
-        data = torch.cat((input_ids_pad, token_type_ids_pad, attention_mask_pad), dim=0)
+        data = torch.stack((input_ids_pad, token_type_ids_pad, attention_mask_pad))
         label = torch.hstack(label)
 
         return data, label
