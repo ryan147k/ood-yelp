@@ -64,6 +64,33 @@ class _YelpClusterBaseDataset(Dataset):
         return self.size
 
 
+class YelpDatasetForBow(Dataset):
+    def __init__(self, _class):
+        super(YelpDatasetForBow, self).__init__()
+        self.data = _YelpClusterBaseDataset(_class)
+        self.vocab = pickle.load(open('./YelpVocab.pkl', 'rb'))
+
+    def __getitem__(self, index):
+        text, label = self.data[index]
+        text = torch.FloatTensor(self._token2bow(self._tokenizer(text)))
+        label = torch.LongTensor([label])
+        return text, label
+
+    def __len__(self):
+        return len(self.data)
+
+    def _token2bow(self, tokens):
+        bow = [0] * len(self.vocab)
+        for token in tokens:
+            idx = self.vocab.stoi[token]
+            bow[idx] += 1
+        return bow
+
+    @staticmethod
+    def _tokenizer(text):
+        return word_tokenize(text)
+
+
 class YelpDatasetForGlove(Dataset):
     def __init__(self, _class):
         super(YelpDatasetForGlove, self).__init__()
@@ -251,4 +278,6 @@ class YelpDatasetForElmo(Dataset):
 
 
 if __name__ == "__main__":
+    dataset = YelpDatasetForBow(0)
+    a = dataset[0]
     pass
