@@ -41,7 +41,7 @@ class _YelpClusterBaseDataset(Dataset):
 
         super(_YelpClusterBaseDataset, self).__init__()
 
-        self.max_length = 128
+        self.max_length = 256
 
         self.pos_data_path = os.path.join(root, f'{str(_class)}/pos.csv')
         self.neg_data_path = os.path.join(root, f'{str(_class)}/neg.csv')
