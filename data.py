@@ -54,7 +54,7 @@ class _YelpClusterBaseDataset(Dataset):
         line = linecache.getline(data_path, index)
         label, text = list(csv.reader([line]))[0]
 
-        # 截取文本的前128个单词
+        # 截取文本的前256个字符(约50个单词)
         if len(text) > self.max_length:
             text = text[:self.max_length]
 
