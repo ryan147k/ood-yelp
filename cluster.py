@@ -294,8 +294,8 @@ def plot():
 
     ax = plt.subplot(1, 3, 3)
     ax.set_title('Total Samples')
-    ax.scatter(emb_tsne_pos[:, 0], emb_tsne_pos[:, 1], c=labels_pos_, cmap='Purples')
-    ax.scatter(emb_tsne_neg[:, 0], emb_tsne_neg[:, 1], c=labels_neg_, cmap='Blues')
+    emb_pos = _pca(True)
+    emb_neg = _pca(False)
 
     plt.show()
 

@@ -8,7 +8,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
 from torch.optim import lr_scheduler
-from model import WordAvg, DPCNN, BiLSTM, BertBase, ELMo, XLNetBase, SelfAttention
+from model import Bow, WordAvg, DPCNN, BiLSTM, BertBase, ELMo, XLNetBase, SelfAttention
 from data import YelpVocab, YelpDatasetForGlove, YelpDatasetForBert, YelpDatasetForElmo, YelpDatasetForXLNet
 from tensorboardX import SummaryWriter
 import matplotlib.pyplot as plt
@@ -317,7 +317,7 @@ class Experiment:
     @classmethod
     def ex3(cls):
         args.batch_size = 512
-        args.epoch_num = 40
+        args.epoch_num = 100
         print(args)
 
         ex_name = 'ex3'
@@ -331,21 +331,36 @@ class Experiment:
     @classmethod
     def ex4(cls):
         args.batch_size = 128
-        args.epoch_num = 40
+        args.epoch_num = 100
         print(args)
 
         ex_name = 'ex4'
         save_dir = './ckpts/ex4/0923'
-        log_dir = './log/ex4'
         cls._mkdir(save_dir)
-        cls._mkdir(log_dir)
 
         model = SelfAttention()
         train_dataset, val_dataset = cls._dataset_split(YelpDatasetForGlove(0))
         train(model, f'{save_dir}/{model.__class__.__name__}', ex_name, train_dataset, val_dataset)
 
+    @classmethod
+    def ex5(cls):
+        """测试用"""
+        args.batch_size = 8
+        args.epoch_num = 100
+        print(args)
 
-# os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+        # ex_name = 'ex4'
+        # save_dir = './ckpts/ex4/0923'
+        # cls._mkdir(save_dir)
+
+        model = BertBase()
+        train_dataset, val_dataset = cls._dataset_split(YelpDatasetForBert(0))
+        # train(model, f'{save_dir}/{model.__class__.__name__}', ex_name, train_dataset, val_dataset)
+        print(cls._basic_test(model, val_dataset))
+
+
+args.ex_num = '5'
+os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 ex = getattr(Experiment, f'ex{args.ex_num.strip()}')
 ex()
